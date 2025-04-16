@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const sql = require('../db.js');
 const authGuard = require('../middleware/authGuard.js'); // Import the auth guard middleware
-
+const jwt = require("jsonwebtoken")
 const DEFAULT_AVATAR_URL = 'https://example.com/default-avatar.png';
 
 router.get('/', authGuard, async (req, res, next) => {
