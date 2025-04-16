@@ -5,5 +5,5 @@ STEP 2
 Generate app
 
 STEP 3 
-Test deploy app
+Test deploy app | SUCCESS!!!
 
