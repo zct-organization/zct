@@ -1,13 +1,21 @@
-STEP 1
-Initialize PostgreSQL database on Supabase
+## 📋 Project Task List (Speech To Text)
 
-STEP 2
-Generate app
+### 🖥️ Frontend
+- [ ] **Login / Register pages**
+- [ ] **Transcription logic**
+- [ ] **Transcription history UI**
+- [ ] **User profile edit** (change avatar / username)
 
-STEP 3 
-Test deploy app | SUCCESS!!!
+### ⚙️ Backend
+- [x] **Auth module** – Login / Register / Edit user&nbsp;✔︎  
+  &nbsp;&nbsp;&nbsp;_Users are stored in the database and can update their profile_  
+- [ ] **Transcription endpoint** – process requests and save history per user
 
-STEP 4 
-Connect to Supabase db - Failed.. i think because they make it available only via IPv6...
+### 🚀 Stretch Goal
+- [ ] **Text‑to‑Speech support**
 
-*Add environment variables DB_URI + JWT_SECRET to Azure
+### 🛠️ Providers & Services
+- [x] **Azure** – backend deployed  
+- [x] ~~Supabase~~ **Neon** – database hosted  
+- [ ] **Firebase** – frontend deployment  
+- [ ] **OpenAI Speech‑to‑Text API**
