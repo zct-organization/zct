@@ -1,6 +1,4 @@
-const postgres = require("postgres")
+const { neon } = require("@neondatabase/serverless");
 
-const connectionString = process.env.DB_URI
-const sql = postgres(connectionString, {})
-
+const sql = neon(process.env.DB_URI)
 module.exports = sql
