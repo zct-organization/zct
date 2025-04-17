@@ -8,8 +8,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var transcriptionRoutes = require('./routes/transcription');
-
 var cors = require('cors');       
+
 var app = express();
 
 // view engine setup
@@ -31,6 +31,10 @@ app.use('/transcription', transcriptionRoutes);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+app.get("health", (req, res) => {
+  res.send("Alive")
+})
 
 // error handler
 app.use(function(err, req, res, next) {
