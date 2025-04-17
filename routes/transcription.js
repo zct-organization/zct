@@ -39,12 +39,14 @@ router.post('/text-to-speech', authGuard, upload.none(), async (req, res) => {
 
     const buffer = Buffer.from(await response.arrayBuffer());
 
-    await sql`
+    const [entry] = await sql`
       INSERT INTO transcription_history (user_id, request_type, input_text, audio_data)
-      VALUES (${req.user.id}, 'tts', ${input_text}, ${buffer})
+      VALUES (${req.user.id.toString()}, 'tts', ${input_text}, ${buffer})
+      RETURNING id;
     `;
 
     res.setHeader('Content-Type', `audio/${response_format}`);
+    res.setHeader('Content-Disposition', `attachment; filename="speech.${response_format}"`);
     res.send(buffer);
 
   } catch (error) {
@@ -69,7 +71,7 @@ router.post('/speech-to-text', authGuard, upload.single('audio'), async (req, re
 
   try {
     const fileStream = Readable.from(req.file.buffer);
-    fileStream.path = req.file.originalname; 
+    fileStream.path = req.file.originalname;
 
     const options = {
       file: fileStream,
@@ -91,9 +93,10 @@ router.post('/speech-to-text', authGuard, upload.single('audio'), async (req, re
 
     const transcription = await openai.audio.transcriptions.create(options);
 
-    await sql`
+    const [entry] = await sql`
       INSERT INTO transcription_history (user_id, request_type, transcript_text)
-      VALUES (${req.user.id}, 'stt', ${transcription.text})
+      VALUES (${req.user.id.toString()}, 'stt', ${transcription.text})
+      RETURNING id;
     `;
 
     if (response_format === 'json' || response_format === 'verbose_json') {
@@ -113,7 +116,7 @@ router.get('/:id', authGuard, async (req, res) => {
 
   try {
     const [entry] = await sql`
-      SELECT * FROM transcription_history WHERE id = ${id} AND user_id = ${req.user.id}
+      SELECT * FROM transcription_history WHERE id = ${id} AND user_id = ${req.user.id.toString()}
     `;
 
     if (!entry) {
@@ -136,6 +139,5 @@ router.get('/:id', authGuard, async (req, res) => {
     res.status(500).json({ msg: 'Error retrieving transcription entry', error: error.message });
   }
 });
-
 
 module.exports = router;
