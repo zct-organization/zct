@@ -19,7 +19,7 @@
 
 <br>
 
-![Architecture Diagram](diagram.png)
+![Architecture Diagram](diagram2.png)
 
 <br>
 
