@@ -22,5 +22,5 @@
 ### 🛠️ Providers & Services
 - [x] **Azure** – backend deployed  
 - [x] ~~Supabase~~ **Neon** – database hosted  
-- [ ] **Firebase** – frontend deployment  
+- [x] **Firebase** – frontend deployment  
 - [ ] **OpenAI Speech‑to‑Text API**
