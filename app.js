@@ -32,8 +32,8 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-app.get("health", (req, res) => {
-  res.send("Alive")
+app.get("/health", (req, res) => {
+  res.send("Alive").status(200)
 })
 
 // error handler
