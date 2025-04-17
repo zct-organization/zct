@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { textToSpeech } from "../../api/tts";
 import { speechToText } from "../../api/stt";
 import { getHistory, getHistoryAudio } from "../../api/history";
+import EditProfileModal from "../common/EditProfileModal";
 import { AuthContext } from "../../contexts/AuthContext";
 import Select from "react-select";
 import FancyAudio from "../common/FancyAudio";
+import defaultAvatar from "../../assets/default-avatar.svg";
 import "./ChatPage.css";
 import alloyMP3 from "./voices/alloy.mp3";
 import ashMP3 from "./voices/ash.mp3";
@@ -18,7 +20,7 @@ import sageMP3 from "./voices/sage.mp3";
 import shimmerMP3 from "./voices/shimmer.mp3";
 
 export default function ChatPage() {
-  const { token, logout } = useContext(AuthContext);
+  const { token, user = {}, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const voices = [
@@ -35,7 +37,7 @@ export default function ChatPage() {
   const speeds = [
     { value: 0.25, label: "0.25×" },
     { value: 0.4, label: "0.4×" },
-    { value: 1, label: "1×" }
+    { value: 1, label: "1×" },
   ];
   const formats = [
     { value: "mp3", label: "MP3" },
@@ -43,11 +45,10 @@ export default function ChatPage() {
     { value: "aac", label: "AAC" },
     { value: "flac", label: "FLAC" },
     { value: "wav", label: "WAV" },
-    { value: "pcm", label: "PCM" }
+    { value: "pcm", label: "PCM" },
   ];
 
   const [showSidebar, setShowSidebar] = useState(true);
-
   const [mode, setMode] = useState("tts");
   const [text, setText] = useState("");
   const [voice, setVoice] = useState("alloy");
@@ -58,16 +59,27 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const avatarSrc =
+    user.avatarurl &&
+    user.avatarurl !== "https://example.com/default-avatar.png"
+      ? user.avatarurl
+      : defaultAvatar;
+
   const [history, setHistory] = useState([]);
   useEffect(() => {
     (async () => {
       try {
         setHistory(await getHistory(token));
-      } catch (e) {
-        console.error(e);
-      }
+      } catch {}
     })();
   }, [token]);
+
+  const [showEdit, setShowEdit] = useState(false);
+  const updateUser = (u) => {
+    user.username = u.username;
+    user.avatarurl = u.avatarurl;
+    setShowEdit(false);
+  };
 
   const resetFields = () => {
     setText("");
@@ -84,7 +96,7 @@ export default function ChatPage() {
     setMode(val);
   };
 
-  async function handleTTS() {
+  const handleTTS = async () => {
     if (!text.trim()) return;
     setLoading(true);
     setError("");
@@ -103,16 +115,20 @@ export default function ChatPage() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  const handleSTT = async e => {
+  const handleSTT = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setLoading(true);
     setError("");
     setTranscript("");
     try {
-      const { text: tx, language, duration } = await speechToText(file, {}, token);
+      const {
+        text: tx,
+        language,
+        duration,
+      } = await speechToText(file, {}, token);
       setTranscript(`Language: ${language}\nDuration: ${duration}s\n\n${tx}`);
       setHistory(await getHistory(token));
     } catch (e) {
@@ -126,9 +142,9 @@ export default function ChatPage() {
       setLoading(false);
       e.target.value = "";
     }
-  }
+  };
 
-  async function loadFromHistory(item) {
+  const loadFromHistory = async (item) => {
     resetFields();
     if (item.request_type === "tts") {
       handleModeChange("tts");
@@ -143,7 +159,7 @@ export default function ChatPage() {
       handleModeChange("stt");
       setTranscript(item.transcript_text ?? "");
     }
-  }
+  };
 
   const selectStyles = {
     control: (base, state) => ({
@@ -193,6 +209,16 @@ export default function ChatPage() {
   return (
     <div className="page-wrapper">
       <aside className={`sidebar ${showSidebar ? "" : "collapsed"}`}>
+        <div className="user-bar">
+          <img src={avatarSrc} alt="avatar" onClick={() => setShowEdit(true)} />
+          <span onClick={() => setShowEdit(true)}>
+            {user.username || "User"}
+          </span>
+          <button className="logout-btn" onClick={logout}>
+            ⎋
+          </button>
+        </div>
+
         <h3>History</h3>
         <ul className="hist-list">
           {history.map((h) => (
@@ -358,6 +384,15 @@ export default function ChatPage() {
           {error && <p className="error-msg">{error}</p>}
         </section>
       </main>
+
+      {showEdit && (
+        <EditProfileModal
+          user={user}
+          token={token}
+          onSave={updateUser}
+          onClose={() => setShowEdit(false)}
+        />
+      )}
     </div>
   );
 }
