@@ -108,4 +108,34 @@ router.post('/speech-to-text', authGuard, upload.single('audio'), async (req, re
   }
 });
 
+router.get('/:id', authGuard, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [entry] = await sql`
+      SELECT * FROM transcription_history WHERE id = ${id} AND user_id = ${req.user.id}
+    `;
+
+    if (!entry) {
+      return res.status(404).json({ msg: 'Entry not found' });
+    }
+
+    if (entry.request_type === 'tts' && entry.audio_data) {
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Content-Disposition', 'inline; filename="speech.mp3"');
+      return res.send(entry.audio_data);
+    }
+
+    if (entry.request_type === 'stt' && entry.transcript_text) {
+      return res.json({ transcript: entry.transcript_text });
+    }
+
+    res.status(400).json({ msg: 'Invalid entry data' });
+  } catch (error) {
+    console.error('GET /transcription/:id error:', error);
+    res.status(500).json({ msg: 'Error retrieving transcription entry', error: error.message });
+  }
+});
+
+
 module.exports = router;
