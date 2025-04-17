@@ -1,4 +1,4 @@
-const API_BASE = process.env.REACT_APP_API_URL;
+import { API_BASE } from "../constants/constants";
 
 export async function registerUser(username, password) {
   const res = await fetch(`${API_BASE}/users/register`, {
