@@ -1,0 +1,198 @@
+:root {
+  --bg: linear-gradient(135deg, #e6eefc 0%, #d8e4fa 45%, #cddaf6 100%);
+  --card-bg: #f7f9ff;
+  --border: #c9d5f2;
+  --text: #263042;
+  --link: #2575fc;
+  --primary: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+  --primary-hover: linear-gradient(90deg, #5910b1 0%, #1d5ed3 100%);
+  --error: #e74c3c;
+}
+[data-theme="dark"] {
+  --bg: linear-gradient(135deg, #1f1c2c 0%, #0f0c13 100%);
+  --card-bg: rgba(30, 30, 30, 0.6);
+  --border: rgba(255, 255, 255, 0.12);
+  --text: #e0e0e0;
+  --link: #58a6ff;
+  --primary: linear-gradient(90deg, #8e44ad 0%, #2980b9 100%);
+  --primary-hover: linear-gradient(90deg, #73348f 0%, #1e6098 100%);
+  --error: #ff7b72;
+}
+
+.chat-root {
+  height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mode-dropdown {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.65rem 1.4rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.mode-dropdown:hover {
+  border-color: var(--link);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.chat-core {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  width: min(90vw, 900px);
+}
+.chat-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.preview-list {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.preview-btn {
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.preview-btn:hover:not(:disabled) {
+  border-color: var(--link);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+.preview-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.input-bar {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.75rem 1.4rem;
+  width: 100%;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.input-bar:hover {
+  border-color: var(--link);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+.input-field {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 1.2rem;
+  resize: none;
+  outline: none;
+}
+.send-btn {
+  border: none;
+  border-radius: 50%;
+  width: 2.8rem;
+  height: 2.8rem;
+  background: var(--primary);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  margin-left: 0.8rem;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+.send-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.send-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.option-row {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pill {
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.65rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.pill:hover {
+  border-color: var(--link);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+.pill.primary {
+  background: var(--primary);
+  border-color: transparent;
+  color: #fff;
+}
+.pill.primary:hover {
+  filter: brightness(1.08);
+}
+
+.upload-area {
+  border: 2px dashed var(--border);
+  background: var(--card-bg);
+  border-radius: 1.2rem;
+  padding: 2.5rem 4rem;
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.upload-area:hover {
+  border-color: var(--link);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+.upload-area input {
+  display: none;
+}
+
+.result-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.error-msg {
+  color: var(--error);
+  font-size: 1rem;
+  margin: 0;
+}
+
+[data-theme="dark"] .preview-btn,
+[data-theme="dark"] .pill,
+[data-theme="dark"] .input-bar,
+[data-theme="dark"] .upload-area {
+  box-shadow: none;
+}
