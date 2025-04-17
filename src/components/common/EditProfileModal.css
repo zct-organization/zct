@@ -1,0 +1,63 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 20;
+}
+
+.modal-card {
+  width: min(90vw, 400px);
+  background: #ffffff;
+  color: var(--text);
+  border-radius: 1.2rem;
+  padding: 2rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+[data-theme="dark"] .modal-card {
+  background: #1f1f1f;
+}
+
+.modal-card h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.modal-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.modal-card input {
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.modal-card input:focus {
+  outline: none;
+  border-color: var(--link);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.modal-err {
+  color: var(--error);
+  margin: 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
