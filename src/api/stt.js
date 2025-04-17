@@ -1,5 +1,4 @@
-const API_BASE =
-  "https://zct-testbla-crgne6d4gcgkh0cj.northeurope-01.azurewebsites.net";
+const API_BASE = process.env.REACT_APP_API_URL;
 
 export async function speechToText(
   file,
