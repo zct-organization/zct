@@ -7,12 +7,15 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
-  <BrowserRouter>
-    <ThemeProvider>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </ThemeProvider>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <ThemeProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
