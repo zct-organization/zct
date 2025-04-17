@@ -2,9 +2,9 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const sql = require('../db.js');
-const authGuard = require('../middleware/authGuard.js'); // Import the auth guard middleware
+const authGuard = require('../middleware/authGuard.js');
 const jwt = require("jsonwebtoken")
-const DEFAULT_AVATAR_URL = 'https://example.com/default-avatar.png';
+const DEFAULT_AVATAR_URL = 'https://robohash.org/62.152.252.183.png';
 
 router.get('/', authGuard, async (req, res, next) => {
   try {
@@ -98,14 +98,9 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-router.put('/:id', authGuard, async (req, res, next) => {
+router.put('/', authGuard, async (req, res, next) => {
   const { username, avatarurl } = req.body;
-  const { id } = req.params;
-
-  // Optionally: Check if req.user.id matches the id parameter to ensure users can only edit their data.
-  if (req.user.id != id) {
-    return res.status(403).json({ msg: 'Unauthorized to update this user' });
-  }
+  const { id } = req.user.id;
 
   try {
     const updated = await sql`
