@@ -46,7 +46,7 @@ router.post('/text-to-speech', authGuard, upload.none(), async (req, res) => {
 
     await sql`
       INSERT INTO transcription_history (user_id, request_type, input_text, audio_data)
-      VALUES (${req.user.id}, 'tts', ${input_text}, ${buffer})
+      VALUES (${req.user.id.toString()}, 'tts', ${input_text}, ${buffer})
     `;
 
     res.sendFile(outputPath, () => {
@@ -108,7 +108,7 @@ router.post('/speech-to-text', authGuard, upload.single('audio'), async (req, re
 
     await sql`
       INSERT INTO transcription_history (user_id, request_type, transcript_text)
-      VALUES (${req.user.id}, 'stt', ${transcription.text})
+      VALUES (${req.user.id.toString()}, 'stt', ${transcription.text})
     `;
 
     if (response_format === 'json' || response_format === 'verbose_json') {
@@ -131,7 +131,7 @@ router.get('/:id', authGuard, async (req, res) => {
 
   try {
     const [entry] = await sql`
-      SELECT * FROM transcription_history WHERE id = ${id} AND user_id = ${req.user.id}
+      SELECT * FROM transcription_history WHERE id = ${id} AND user_id = ${req.user.id.toString()}
     `;
 
     if (!entry) {
