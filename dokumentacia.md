@@ -29,7 +29,7 @@ Používateľ odošle text alebo audio prostredníctvom webového rozhrania → 
 
 <h3>Rozdelenie práce:</h3>
 
-- 🙍‍♂️ **Y. Zhuravskyi** — 
+- 🙍‍♂️ **Y. Zhuravskyi** — frontend(basic template , logout if token expired , contant variable from git , bug fix) , deploy(host) on FireBase
 - 🙍‍♀️ **M. Paik** —   
 - 🙍‍♂️ **P. Smitiuk** —   
 - 🙍‍♂️ **O. Shtefan** —   
