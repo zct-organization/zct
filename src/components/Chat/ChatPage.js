@@ -6,7 +6,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import "./ChatPage.css";
 
 export default function ChatPage() {
-  const { token } = useContext(AuthContext);
+  const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const voices = [
@@ -19,13 +19,13 @@ export default function ChatPage() {
     { value: "nova", label: "Nova", sample: "/voices/nova.mp3" },
     { value: "sage", label: "Sage", sample: "/voices/sage.mp3" },
     { value: "shimmer", label: "Shimmer", sample: "/voices/shimmer.mp3" },
-    { value: "verse", label: "Verse", sample: "/voices/verse.mp3" },
+    { value: "verse", label: "Verse", sample: "/voices/verse.mp3" }
   ];
 
   const speeds = [
     { value: 0.25, label: "0.25×" },
     { value: 0.4, label: "0.4×" },
-    { value: 1, label: "1×" },
+    { value: 1, label: "1×" }
   ];
 
   const formats = [
@@ -34,7 +34,7 @@ export default function ChatPage() {
     { value: "aac", label: "AAC" },
     { value: "flac", label: "FLAC" },
     { value: "wav", label: "WAV" },
-    { value: "pcm", label: "PCM" },
+    { value: "pcm", label: "PCM" }
   ];
 
   const [mode, setMode] = useState("tts");
@@ -47,8 +47,8 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const playPreview = (v) => {
-    const url = voices.find((x) => x.value === v).sample;
+  const playPreview = v => {
+    const url = voices.find(x => x.value === v).sample;
     new Audio(url).play();
   };
 
@@ -62,6 +62,7 @@ export default function ChatPage() {
       setAudioUrl(URL.createObjectURL(blob));
     } catch (e) {
       if (e.code === 401) {
+        logout();
         navigate("/login");
       } else {
         setError(e.message);
@@ -71,7 +72,7 @@ export default function ChatPage() {
     }
   };
 
-  const handleSTT = async (e) => {
+  const handleSTT = async e => {
     const file = e.target.files[0];
     if (!file) return;
     setError("");
@@ -82,6 +83,7 @@ export default function ChatPage() {
       setTranscript(`Language: ${language}\nDuration: ${duration}s\n\n${tx}`);
     } catch (e) {
       if (e.code === 401) {
+        logout();
         navigate("/login");
       } else {
         setError(e.message);
@@ -94,28 +96,21 @@ export default function ChatPage() {
 
   return (
     <main className="chat-root">
-      <select
-        className="mode-dropdown"
-        value={mode}
-        onChange={(e) => setMode(e.target.value)}
-      >
+      <select className="mode-dropdown" value={mode} onChange={e => setMode(e.target.value)}>
         <option value="tts">Text → Speech</option>
         <option value="stt">Speech → Text</option>
       </select>
-
       <section className="chat-core">
         <h2 className="chat-title">What can I help with?</h2>
-
         {mode === "tts" && (
           <div className="preview-list">
-            {voices.map((v) => (
+            {voices.map(v => (
               <button key={v.value} className="preview-btn" onClick={() => playPreview(v.value)}>
                 {v.label} ▶️
               </button>
             ))}
           </div>
         )}
-
         {mode === "tts" ? (
           <>
             <div className="input-bar">
@@ -124,37 +119,35 @@ export default function ChatPage() {
                 placeholder="Enter text..."
                 rows={1}
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={e => setText(e.target.value)}
               />
               <button className="send-btn" disabled={loading || !text.trim()} onClick={handleTTS}>
                 ▶️
               </button>
             </div>
-
             <div className="option-row">
-              <select className="pill" value={voice} onChange={(e) => setVoice(e.target.value)}>
-                {voices.map((o) => (
+              <select className="pill" value={voice} onChange={e => setVoice(e.target.value)}>
+                {voices.map(o => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
                 ))}
               </select>
-              <select className="pill" value={speed} onChange={(e) => setSpeed(Number(e.target.value))}>
-                {speeds.map((o) => (
+              <select className="pill" value={speed} onChange={e => setSpeed(Number(e.target.value))}>
+                {speeds.map(o => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
                 ))}
               </select>
-              <select className="pill" value={format} onChange={(e) => setFormat(e.target.value)}>
-                {formats.map((o) => (
+              <select className="pill" value={format} onChange={e => setFormat(e.target.value)}>
+                {formats.map(o => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
                 ))}
               </select>
             </div>
-
             {audioUrl && (
               <div className="result-block">
                 <audio controls src={audioUrl} />
@@ -170,13 +163,11 @@ export default function ChatPage() {
               <input type="file" accept="audio/*" onChange={handleSTT} disabled={loading} />
               <span>Choose audio…</span>
             </label>
-
             {transcript && (
               <textarea className="input-field" readOnly value={transcript} rows={6} />
             )}
           </>
         )}
-
         {error && <p className="error-msg">{error}</p>}
       </section>
     </main>
