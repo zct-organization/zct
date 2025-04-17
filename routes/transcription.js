@@ -4,12 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const { OpenAI } = require('openai');
 const { v4: uuidv4 } = require('uuid');
+const { Readable } = require('stream');
 require('dotenv').config();
 
 const router = express.Router();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const upload = multer();
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.post('/text-to-speech', upload.none(), async (req, res) => {
   const {
@@ -52,59 +53,66 @@ router.post('/text-to-speech', upload.none(), async (req, res) => {
   }
 });
 
-
 router.post('/speech-to-text', upload.single('audio'), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ msg: 'No audio file uploaded' });
-  }
-
-  const {
-    model = 'whisper-1',                         // whisper-1 | gpt-4o-transcribe | gpt-4o-mini-transcribe
-    prompt,                                      // optional
-    response_format = 'json',                    // json, text, srt, verbose_json, vtt
-    temperature = '0',                           // optional, float
-    language,                                    // optional (e.g. "en", "sk", "de")
-    timestamp_granularities                      // optional JSON array string: '["word","segment"]'
-  } = req.body;
-
-  try {
-    const options = {
-      file: fs.createReadStream(req.file.path),
-      model,
-      response_format,
-      temperature: parseFloat(temperature),
-    };
-
-    if (prompt) options.prompt = prompt;
-    if (language) options.language = language;
-
-    if (
-      model === 'whisper-1' &&
-      response_format === 'verbose_json' &&
+    if (!req.file) {
+      return res.status(400).json({ msg: 'No audio file uploaded' });
+    }
+  
+    const {
+      model = 'whisper-1',
+      prompt,
+      response_format = 'json',
+      temperature = '0',
+      language,
       timestamp_granularities
-    ) {
-      try {
-        options.timestamp_granularities = JSON.parse(timestamp_granularities);
-      } catch (err) {
-        return res.status(400).json({ msg: 'Invalid JSON in timestamp_granularities' });
+    } = req.body;
+  
+    const tempFilename = `${uuidv4()}_${req.file.originalname}`;
+    const tempFilePath = path.join(__dirname, '../temp', tempFilename);
+  
+    try {
+      fs.mkdirSync(path.dirname(tempFilePath), { recursive: true });
+      fs.writeFileSync(tempFilePath, req.file.buffer);
+  
+      const options = {
+        file: fs.createReadStream(tempFilePath),
+        model,
+        response_format,
+        temperature: parseFloat(temperature),
+      };
+  
+      if (prompt) options.prompt = prompt;
+      if (language) options.language = language;
+  
+      if (
+        model === 'whisper-1' &&
+        response_format === 'verbose_json' &&
+        timestamp_granularities
+      ) {
+        try {
+          options.timestamp_granularities = JSON.parse(timestamp_granularities);
+        } catch (err) {
+          return res.status(400).json({ msg: 'Invalid JSON in timestamp_granularities' });
+        }
       }
+  
+      const transcription = await openai.audio.transcriptions.create(options);
+  
+      fs.unlinkSync(tempFilePath); 
+  
+      if (response_format === 'json' || response_format === 'verbose_json') {
+        res.json(transcription);
+      } else {
+        res.type(response_format).send(transcription);
+      }
+  
+    } catch (error) {
+      console.error('STT Error:', error);
+      try {
+        fs.unlinkSync(tempFilePath); 
+      } catch (e) {}
+      res.status(500).json({ msg: 'Error transcribing audio', error: error.message });
     }
-
-    const transcription = await openai.audio.transcriptions.create(options);
-
-    fs.unlinkSync(req.file.path); 
-
-    if (response_format === 'json' || response_format === 'verbose_json') {
-      res.json(transcription);
-    } else {
-      res.type(response_format).send(transcription);
-    }
-
-  } catch (error) {
-    console.error('STT Error:', error);
-    res.status(500).json({ msg: 'Error transcribing audio', error: error.message });
-  }
-});
-
+  });
   
 module.exports = router;
