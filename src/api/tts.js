@@ -1,4 +1,5 @@
-const API_BASE = process.env.REACT_APP_API_URL;
+import { API_BASE } from "../constants/constants";
+
 
 export async function textToSpeech(
   {
@@ -25,6 +26,12 @@ export async function textToSpeech(
     body: fd,
   });
 
+  if (res.status === 401) {
+    const err = new Error("Unauthorized");
+    err.code = 401;
+    throw err;
+  }
+  
   if (!res.ok) {
     const { msg } = await res.json().catch(() => ({}));
     throw new Error(msg || `TTS error ${res.status}`);

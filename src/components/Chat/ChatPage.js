@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { textToSpeech } from "../../api/tts";
 import { speechToText } from "../../api/stt";
 import { getHistory, getHistoryAudio } from "../../api/history";
@@ -17,7 +18,8 @@ import sageMP3 from "./voices/sage.mp3";
 import shimmerMP3 from "./voices/shimmer.mp3";
 
 export default function ChatPage() {
-  const { token } = useContext(AuthContext);
+  const { token, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const voices = [
     { value: "alloy", label: "Alloy", sample: alloyMP3 },
@@ -33,7 +35,7 @@ export default function ChatPage() {
   const speeds = [
     { value: 0.25, label: "0.25×" },
     { value: 0.4, label: "0.4×" },
-    { value: 1, label: "1×" },
+    { value: 1, label: "1×" }
   ];
   const formats = [
     { value: "mp3", label: "MP3" },
@@ -41,7 +43,7 @@ export default function ChatPage() {
     { value: "aac", label: "AAC" },
     { value: "flac", label: "FLAC" },
     { value: "wav", label: "WAV" },
-    { value: "pcm", label: "PCM" },
+    { value: "pcm", label: "PCM" }
   ];
 
   const [showSidebar, setShowSidebar] = useState(true);
@@ -51,7 +53,6 @@ export default function ChatPage() {
   const [voice, setVoice] = useState("alloy");
   const [speed, setSpeed] = useState(1);
   const [format, setFormat] = useState("mp3");
-
   const [audioUrl, setAudioUrl] = useState("");
   const [transcript, setTranscript] = useState("");
   const [loading, setLoading] = useState(false);
@@ -93,28 +94,34 @@ export default function ChatPage() {
       setAudioUrl(URL.createObjectURL(blob));
       setHistory(await getHistory(token));
     } catch (e) {
-      setError(e.message);
+      if (e.code === 401) {
+        logout();
+        navigate("/login");
+      } else {
+        setError(e.message);
+      }
     } finally {
       setLoading(false);
     }
   }
 
-  async function handleSTT(e) {
+  const handleSTT = async e => {
     const file = e.target.files[0];
     if (!file) return;
     setLoading(true);
     setError("");
     setTranscript("");
     try {
-      const {
-        text: tx,
-        language,
-        duration,
-      } = await speechToText(file, {}, token);
+      const { text: tx, language, duration } = await speechToText(file, {}, token);
       setTranscript(`Language: ${language}\nDuration: ${duration}s\n\n${tx}`);
       setHistory(await getHistory(token));
     } catch (e) {
-      setError(e.message);
+      if (e.code === 401) {
+        logout();
+        navigate("/login");
+      } else {
+        setError(e.message);
+      }
     } finally {
       setLoading(false);
       e.target.value = "";

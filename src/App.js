@@ -27,11 +27,11 @@ export default function App() {
 
         <Route
           path="/login"
-          element={!token ? <Login /> : <Navigate to="/chat" replace />}
+          element={<Login />}
         />
         <Route
           path="/signup"
-          element={!token ? <Signup /> : <Navigate to="/chat" replace />}
+          element={<Signup />}
         />
 
         <Route
