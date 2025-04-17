@@ -7,7 +7,7 @@
 
 ### 🖥️ Frontend
 - [x] **Login / Register pages**
-- [ ] **Transcription logic**
+- [x] **Transcription logic**
 - [ ] **Transcription history UI**
 - [ ] **User profile edit** (change avatar / username)
 
