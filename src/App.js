@@ -1,22 +1,30 @@
-import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from 'react-router-dom';
+import React, { useContext, useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { AuthContext } from "./contexts/AuthContext";
+import ThemeToggle from "./components/ThemeToggle";
+import Login from "./components/Auth/Login";
+import Signup from "./components/Auth/Signup";
+import Home from "./components/Home";
 
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
+export default function App() {
+  const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-function App() {
+  useEffect(() => {
+    if (token) navigate("/");
+  }, [token, navigate]);
+
   return (
-    <Router>
+    <>
+      <ThemeToggle />
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route
+          path="/"
+          element={token ? <Home /> : <Navigate to="/login" replace />}
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
-    </Router>
+    </>
   );
 }
-
-export default App;
