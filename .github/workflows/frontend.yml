@@ -14,7 +14,12 @@ jobs:
         run: npm install      
       - name: Build
         env:
-          CI: false        
+          CI: false
+      - name: Create .env.production
+        env:
+          API_BASE: ${{ secrets.API_BASE }}
+        run: |
+          echo "REACT_APP_API_URL=$API_BASE" > .env.production       
         run: npm run build
       - name: Archive Production Artifact
         uses: actions/upload-artifact@v4
