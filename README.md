@@ -6,7 +6,7 @@
 > • `main`     – holds project documentation and serves and To-Do List
 
 ### 🖥️ Frontend
-- [ ] **Login / Register pages**
+- [x] **Login / Register pages**
 - [ ] **Transcription logic**
 - [ ] **Transcription history UI**
 - [ ] **User profile edit** (change avatar / username)
