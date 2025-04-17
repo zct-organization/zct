@@ -8,19 +8,19 @@
 ### 🖥️ Frontend
 - [x] **Login / Register pages**
 - [x] **Transcription logic**
-- [ ] **Transcription history UI**
-- [ ] **User profile edit** (change avatar / username)
+- [x] **Transcription history UI**
+- [x] **User profile edit** (change avatar / username)
 
 ### ⚙️ Backend
 - [x] **Auth module** – Login / Register / Edit user ✔︎  
   &nbsp;&nbsp;&nbsp;_Users are stored in the database and can update their profile_  
-- [ ] **Transcription endpoint** – process requests and save history per user
+- [x] **Transcription endpoint** – process requests and save history per user
 
 ### 🚀 Stretch Goal
-- [ ] **Text‑to‑Speech support**
+- [x] **Text‑to‑Speech support**
 
 ### 🛠️ Providers & Services
 - [x] **Azure** – backend deployed  
 - [x] ~~Supabase~~ **Neon** – database hosted  
 - [x] **Firebase** – frontend deployment  
-- [ ] **OpenAI Speech‑to‑Text API**
+- [x] **OpenAI Speech‑to‑Text API**
