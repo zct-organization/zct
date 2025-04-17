@@ -31,7 +31,7 @@ Používateľ odošle text alebo audio prostredníctvom webového rozhrania → 
 
 - 🙍‍♂️ **Y. Zhuravskyi** — frontend(basic template , logout if token expired , contant variable from git , bug fix) , deploy(host) on FireBase
 - 🙍‍♀️ **M. Paik** —   
-- 🙍‍♂️ **P. Smitiuk** —   
+- 🙍‍♂️ **P. Smitiuk** —   frontend (custom TTS/STT UI with sidebar history & profile modal, voice‑preview, bug‑fixes)
 - 🙍‍♂️ **O. Shtefan** —   
 
 <hr>
