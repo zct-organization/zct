@@ -30,7 +30,7 @@ Používateľ odošle text alebo audio prostredníctvom webového rozhrania → 
 <h3>Rozdelenie práce:</h3>
 
 - 🙍‍♂️ **Y. Zhuravskyi** — frontend(basic template , logout if token expired , contant variable from git , bug fix) , deploy(host) on FireBase
-- 🙍‍♀️ **M. Paik** —   
+- 🙍‍♀️ **M. Paik** —  Open AI TTS/STT integration, transcrpiptions history
 - 🙍‍♂️ **P. Smitiuk** —   frontend (custom TTS/STT UI with sidebar history & profile modal, voice‑preview, bug‑fixes)
 - 🙍‍♂️ **O. Shtefan** — Create DB, deploy server app on Azure, auth logic, small fixes
 
