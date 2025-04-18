@@ -100,8 +100,7 @@ router.post('/login', async (req, res, next) => {
 
 router.put('/', authGuard, async (req, res, next) => {
   const { username, avatarurl } = req.body;
-  const { id } = req.user.id;
-
+  const id = req.user.id;
   try {
     const updated = await sql`
       UPDATE users
