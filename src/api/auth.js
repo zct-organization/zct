@@ -7,11 +7,11 @@ export async function registerUser(username, password) {
     body: JSON.stringify({ username, password }),
   });
   if (!res.ok) {
-    const { message } = await res.json();
-    throw new Error(message || "Registration failed");
+    const { msg } = await res.json().catch(() => ({}));
+    throw new Error(msg || "Registration failed");
   }
-  const { token } = await res.json();
-  return token;
+  const { token, user } = await res.json();
+  return { token, user };
 }
 
 export async function loginUser(username, password) {
